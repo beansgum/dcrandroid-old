@@ -17,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.decrediton.Activities.ReaderActivity;
+import com.decrediton.Util.AccountResponse;
 import com.decrediton.Util.Utils;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
@@ -98,7 +99,7 @@ public class SendFragment extends android.support.v4.app.Fragment implements Ada
                             getActivity().runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    amount.setText(String.valueOf(balance.getSpendable()));
+                                    amount.setText(String.valueOf(balance.getSpendable()/ AccountResponse.SATOSHI));
                                     if(pd.isShowing()){
                                         pd.dismiss();
                                     }

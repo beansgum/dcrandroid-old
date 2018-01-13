@@ -15,11 +15,23 @@ import android.view.ViewGroup;
 import com.decrediton.Activities.TransactionDetailsActivity;
 import com.decrediton.Adapter.TransactionAdapter;
 import com.decrediton.R;
+import com.decrediton.Util.PreferenceUtil;
 import com.decrediton.Util.RecyclerTouchListener;
+import com.decrediton.Util.TransactionsResponse;
 import com.decrediton.data.Transaction;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
+
+import dcrwallet.Dcrwallet;
 
 /**
  * Created by Macsleven on 28/11/2017.
@@ -47,10 +59,10 @@ public class HistoryFragment extends Fragment{
                 i.putExtra("Amount",history.getAmount());
                 i.putExtra("Fee",history.getTransactionFee());
                 i.putExtra("TxDate",history.getTxDate());
+                System.out.println("TxType: "+history.getTxType());
                 i.putExtra("TxType",history.getTxType());
-                i.putExtra("AccountName",history.getAccountName());
                 i.putExtra("TxStatus",history.getTxStatus());
-                i.putStringArrayListExtra("UsedIput",history.getUsedIput());
+                i.putStringArrayListExtra("UsedInput",history.getUsedInput());
                 i.putStringArrayListExtra("newWalletOutPut",history.getWalletOutput());
                 startActivity(i);
             }
@@ -66,14 +78,15 @@ public class HistoryFragment extends Fragment{
         return rootView;
     }
 
-
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         //you can set the title for your toolbar here for different fragments different titles
         getActivity().setTitle("History");
     }
+
     private void prepareHistoryData(){
+<<<<<<< HEAD
         ArrayList<String> usedInput = new ArrayList<>();
         String addr = "THFJDHCBFNGJDHDBS"+ '\n'+"1.00 DCR";
         usedInput.add(addr);
@@ -89,5 +102,101 @@ public class HistoryFragment extends Fragment{
         output.add("TXJKFJFUVNDJFKVNFJEJFKFJVCXJFKGJNFKJE:   3.54 DCR");
         transaction= new Transaction("120.0000000","0.00","jan 1 2018, 11:17:25","pending","default","receive", usedInput, output);
         transactionList.add(transaction);
+=======
+        loadTransactions();
+        new Thread(){
+            public void run(){
+                PreferenceUtil util = new PreferenceUtil(HistoryFragment.this.getContext());
+                int blockHeight = Integer.parseInt(util.get(PreferenceUtil.BLOCK_HEIGHT,"0"));
+                int startingHeight = Integer.parseInt(util.get(PreferenceUtil.TRANSACTION_HEIGHT,"1"));
+                String result = Dcrwallet.getTransactions(blockHeight, startingHeight);
+                TransactionsResponse response = TransactionsResponse.parse(result);
+                if(response.errorOccurred){
+
+                }else {
+                    util.set(PreferenceUtil.TRANSACTION_HEIGHT, String.valueOf(blockHeight));
+                    final List<Transaction> temp = new ArrayList<>();
+                    for (int i = 0; i < response.transactions.size(); i++) {
+                        Transaction transaction = new Transaction();
+                        TransactionsResponse.TransactionItem item = response.transactions.get(i);
+                        Calendar calendar = Calendar.getInstance();
+                        calendar.setTimeInMillis(item.timestamp * 1000);
+                        transaction.setTxDate(calendar.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.getDefault()) + " " + calendar.get(Calendar.DATE) + " " + calendar.get(Calendar.YEAR) + ", " + calendar.get(Calendar.HOUR_OF_DAY) + ":" + calendar.get(Calendar.MINUTE) + ":" + calendar.get(Calendar.SECOND));
+                        transaction.setTransactionFee(String.format(Locale.getDefault(), "%f", item.fee));
+                        transaction.setTxType(item.type);
+                        transaction.setAmount(String.format(Locale.getDefault(), "%f", item.amount));
+                        transaction.setTxStatus(item.status);
+                        ArrayList<String> usedInput = new ArrayList<>();
+                        for (int j = 0; j < item.debits.size(); j++) {
+                            usedInput.add(item.debits.get(j).accountName + "\n" + String.format(Locale.getDefault(), "%f", item.debits.get(j).previous_amount));
+                        }
+                        ArrayList<String> output = new ArrayList<>();
+                        for (int j = 0; j < item.credits.size(); j++) {
+                            output.add(item.credits.get(j).address + "\n" + String.format(Locale.getDefault(), "%f", item.credits.get(j).amount));
+                            //System.out.println(credit.address+"\n"+String.format(Locale.getDefault(),"%f",credit.amount));
+                        }
+                        transaction.setUsedInput(usedInput);
+                        transaction.setWalletOutput(output);
+                        temp.add(transaction);
+                    }
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Collections.reverse(temp);
+                            transactionList.addAll(0,temp);
+                            transactionAdapter.notifyDataSetChanged();
+                            saveTransactions();
+                        }
+                    });
+                }
+            }
+        }.start();
+//        ArrayList<String> usedInput = new ArrayList<>();
+//        usedInput.add("TXFHUEKFHDUWKDLFHEJWIDFLDJFJSHERHDAS\n1.00 DCR");
+//        ArrayList<String> output = new ArrayList<>();
+//        output.add("TXFJFHEJDUFHWQIMCNVHFKRHFUCIFNDHFJH\n3.22 DCR");
+//        output.add("TXJKFJFUVNDJFKVNFJEJFKFJVCXJFKGJNFKJE\n3.54 DCR");
+        //Transaction transaction= new Transaction("0.0000000","0.02","jan 1 2018, 20:19:45","pending","default","send", usedInput, output);
+//        transactionList.add(transaction);
+//         usedInput = new ArrayList<>();
+//        usedInput.add("TXFHUEKFHDUWKDLFHEJWIDFLDJFJSHERHDAS\n5.00 DCR");
+//        output = new ArrayList<>();
+//        output.add("TXFJFHEJDUFHWQIMCNVHFKRHFUCIFNDHFJH\n6.22 DCR");
+//        output.add("TXJKFJFUVNDJFKVNFJEJFKFJVCXJFKGJNFKJE\n3.54 DCR");
+//        transaction= new Transaction("120.0000000","0.00","jan 1 2018, 11:17:25","pending","default","receive", usedInput, output);
+//        transactionList.add(transaction);
+    }
+
+    public void saveTransactions(){
+        try {
+            File path = new File(getContext().getFilesDir()+"/savedata/");
+            path.mkdirs();
+            File file = new File(getContext().getFilesDir()+"/savedata/transactions");
+            file.createNewFile();
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(new FileOutputStream(file));
+            objectOutputStream.writeObject(transactionList);
+            objectOutputStream.close();
+            System.out.println("Transaction Written");
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public void loadTransactions(){
+        try {
+            File path = new File(getContext().getFilesDir()+"/savedata/");
+            path.mkdirs();
+            File file = new File(getContext().getFilesDir()+"/savedata/transactions");
+            if(file.exists()){
+                ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream(file));
+                List<Transaction> temp = (List<Transaction>) objectInputStream.readObject();
+                transactionList.addAll(temp);
+                transactionAdapter.notifyDataSetChanged();
+                System.out.println("Done: "+transactionList.size());
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+>>>>>>> upstream/master
     }
 }
