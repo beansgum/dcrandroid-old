@@ -80,7 +80,7 @@ public class SplashScreen extends AppCompatActivity {
                 File f = new File(Dcrwallet.getHomeDir()+"/mainnet/wallet.db");
                 if(!f.exists()) {
                     // Start your app main activity
-                    Intent i = new Intent(SplashScreen.this, SetupWalletActivity.class);
+                    Intent i = new Intent(SplashScreen.this, MainActivity.class);
                     startActivity(i);
                     // close this activity
                     finish();

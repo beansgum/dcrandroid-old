@@ -75,7 +75,8 @@ public class HistoryFragment extends Fragment{
     }
     private void prepareHistoryData(){
         ArrayList<String> usedInput = new ArrayList<>();
-        usedInput.add("TXFHUEKFHDUWKDLFHEJWIDFLDJFJSHERHDAS:  1.00 DCR");
+        String addr = "THFJDHCBFNGJDHDBS"+ '\n'+"1.00 DCR";
+        usedInput.add(addr);
         ArrayList<String> output = new ArrayList<>();
         output.add("TXFJFHEJDUFHWQIMCNVHFKRHFUCIFNDHFJH:     3.22 DCR");
         output.add("TXJKFJFUVNDJFKVNFJEJFKFJVCXJFKGJNFKJE:   3.54 DCR");
