@@ -86,23 +86,6 @@ public class HistoryFragment extends Fragment{
     }
 
     private void prepareHistoryData(){
-<<<<<<< HEAD
-        ArrayList<String> usedInput = new ArrayList<>();
-        String addr = "THFJDHCBFNGJDHDBS"+ '\n'+"1.00 DCR";
-        usedInput.add(addr);
-        ArrayList<String> output = new ArrayList<>();
-        output.add("TXFJFHEJDUFHWQIMCNVHFKRHFUCIFNDHFJH:     3.22 DCR");
-        output.add("TXJKFJFUVNDJFKVNFJEJFKFJVCXJFKGJNFKJE:   3.54 DCR");
-        Transaction transaction= new Transaction("0.0000000","0.02","jan 1 2018, 20:19:45","pending","default","send", usedInput, output);
-        transactionList.add(transaction);
-         usedInput = new ArrayList<>();
-        usedInput.add("TXFHUEKFHDUWKDLFHEJWIDFLDJFJSHERHDAS:  5.00 DCR");
-        output = new ArrayList<>();
-        output.add("TXFJFHEJDUFHWQIMCNVHFKRHFUCIFNDHFJH:     6.22 DCR");
-        output.add("TXJKFJFUVNDJFKVNFJEJFKFJVCXJFKGJNFKJE:   3.54 DCR");
-        transaction= new Transaction("120.0000000","0.00","jan 1 2018, 11:17:25","pending","default","receive", usedInput, output);
-        transactionList.add(transaction);
-=======
         loadTransactions();
         new Thread(){
             public void run(){
@@ -197,6 +180,5 @@ public class HistoryFragment extends Fragment{
         }catch (Exception e){
             e.printStackTrace();
         }
->>>>>>> upstream/master
     }
 }
