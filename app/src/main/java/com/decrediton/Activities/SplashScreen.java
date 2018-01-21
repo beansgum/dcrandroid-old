@@ -203,16 +203,16 @@ public class SplashScreen extends AppCompatActivity implements Animation.Animati
                 if(Dcrwallet.isTestNet()){
                     dcrdAddress = "127.0.0.1:19109";
                 }
-                for(;;) {
-                    if(Dcrwallet.connectToDcrd(dcrdAddress)){
-                        break;
-                    }
-                    try {
-                        sleep(1500);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
+//                for(;;) {
+//                    if(Dcrwallet.connectToDcrd(dcrdAddress)){
+//                        break;
+//                    }
+//                    try {
+//                        sleep(1500);
+//                    } catch (InterruptedException e) {
+//                        e.printStackTrace();
+//                    }
+//                }
                 System.out.println("Opening");
                 setText(getString(R.string.opening_wallet));
                 final String json = Dcrwallet.openWallet();
@@ -230,6 +230,7 @@ public class SplashScreen extends AppCompatActivity implements Animation.Animati
                 if(blockHeight != -1){
                     util.set(PreferenceUtil.BLOCK_HEIGHT,String.valueOf(blockHeight));
                 }
+                System.out.println("Finished fetching headers");
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -255,6 +256,7 @@ public class SplashScreen extends AppCompatActivity implements Animation.Animati
             e.printStackTrace();
         }
     }
+
     @Override
     public void onBackPressed() {
     }
