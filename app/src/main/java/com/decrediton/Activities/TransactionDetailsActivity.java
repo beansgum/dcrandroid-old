@@ -51,9 +51,11 @@ public class TransactionDetailsActivity extends AppCompatActivity {
         TextView value = findViewById(R.id.tx_dts_value);
         TextView date = findViewById(R.id.tx_date);
         TextView status = findViewById(R.id.tx_dts__status);
-        TextView confirmation = findViewById(R.id.confirmations);
+        TextView txType = findViewById(R.id.txtype);
+        TextView confirmation = findViewById(R.id.tx_dts_confirmation);
         TextView transactionFee = findViewById(R.id.tx_fee);
         final TextView txHash = findViewById(R.id.tx_hash);
+        confirmation.setText(getIntent().getStringExtra("TXConfirmation"));
         txHash.setText(getIntent().getStringExtra("Hash"));
         TextView viewOnDcrdata = findViewById(R.id.tx_view_on_dcrdata);
         viewOnDcrdata.setOnClickListener(new View.OnClickListener() {
@@ -84,7 +86,7 @@ public class TransactionDetailsActivity extends AppCompatActivity {
         }
         date.setText(getIntent().getStringExtra("TxDate"));
         status.setText(getIntent().getStringExtra("TxStatus"));
-        confirmation.setText(getIntent().getStringExtra("TxConfirmation"));
+        txType.setText(getIntent().getStringExtra("TxType"));
         //transactionFee.setText(getIntent().getStringExtra("Fee"));
         if(status.getText().toString().equals("pending")){
             status.setBackgroundResource(R.drawable.tx_status_pending);
