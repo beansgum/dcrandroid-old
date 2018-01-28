@@ -88,13 +88,13 @@ public class HistoryFragment extends Fragment{
     }
 
     private void prepareHistoryData(){
-        //loadTransactions();
+        loadTransactions();
         new Thread(){
             public void run(){
                 PreferenceUtil util = new PreferenceUtil(HistoryFragment.this.getContext());
                 int blockHeight = Integer.parseInt(util.get(PreferenceUtil.BLOCK_HEIGHT,"0"));
                 int startHeight = Integer.parseInt(util.get(PreferenceUtil.TRANSACTION_HEIGHT,"1"));
-                String result = Dcrwallet.getTransactions(blockHeight, 0);
+                String result = Dcrwallet.getTransactions(blockHeight, startHeight);
                 TransactionsResponse response = TransactionsResponse.parse(result);
                 if(response.errorOccurred){
 
@@ -107,11 +107,11 @@ public class HistoryFragment extends Fragment{
                         Calendar calendar = Calendar.getInstance();
                         calendar.setTimeInMillis(item.timestamp * 1000);
                         transaction.setTxDate(calendar.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.getDefault()) + " " + calendar.get(Calendar.DATE) + " " + calendar.get(Calendar.YEAR) + ", " + calendar.get(Calendar.HOUR_OF_DAY) + ":" + calendar.get(Calendar.MINUTE) + ":" + calendar.get(Calendar.SECOND));
-                        transaction.setTransactionFee(String.format(Locale.getDefault(), "%f", item.fee));
+                        transaction.setTransactionFee(String.format(Locale.getDefault(), "%.8f", item.fee));
                         transaction.setType(item.type);
                         transaction.setHash(item.hash);
                       //  transaction.setConfirmations(item.confirmations);
-                        transaction.setAmount(String.format(Locale.getDefault(), "%f", item.amount));
+                        transaction.setAmount(String.format(Locale.getDefault(), "%.8f", item.amount));
                         transaction.setTxStatus(item.status);
                         ArrayList<String> usedInput = new ArrayList<>();
                         for (int j = 0; j < item.debits.size(); j++) {
@@ -125,6 +125,9 @@ public class HistoryFragment extends Fragment{
                         transaction.setUsedInput(usedInput);
                         transaction.setWalletOutput(output);
                         temp.add(transaction);
+                    }
+                    if(getActivity() == null){
+                        return;
                     }
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
