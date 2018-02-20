@@ -80,7 +80,7 @@ public class OverviewFragment extends Fragment implements BlockScanResponse,Swip
         transactionAdapter = new TransactionAdapter(transactionList, layoutInflater);
         reScanBlock =  rootView.getRootView().findViewById(R.id.overview_rescan_btn);
         tvBalance = rootView.getRootView().findViewById(R.id.overview_av_balance);
-        tvBalance.formatAndSetText(String.format(Locale.getDefault(),"%.f DCR", util.getFloat(PreferenceUtil.TOTAL_BALANCE)));
+        tvBalance.formatAndSetText(String.format(Locale.getDefault(),"%.8f DCR", util.getFloat(PreferenceUtil.TOTAL_BALANCE)));
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(rootView.getContext());
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -166,7 +166,7 @@ public class OverviewFragment extends Fragment implements BlockScanResponse,Swip
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            tvBalance.formatAndSetText(String.format(Locale.getDefault(),"%.f DCR",finalTotalBalance));
+                            tvBalance.formatAndSetText(String.format(Locale.getDefault(),"%.8f DCR",finalTotalBalance));
                         }
                     });
                 }catch (Exception e){
