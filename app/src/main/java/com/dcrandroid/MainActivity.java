@@ -131,6 +131,11 @@ public class MainActivity extends AppCompatActivity implements  NavigationView.O
             Intent intent = new Intent(this, AddAccountActivity.class);
             startActivityForResult(intent,1);
         }
+        else if(id == R.id.action_settings){
+           Intent intent = new Intent(this, SettingsActivity.class);
+            startActivity(intent);
+            return true;
+        }
         return super.onOptionsItemSelected(item);
     }
 
