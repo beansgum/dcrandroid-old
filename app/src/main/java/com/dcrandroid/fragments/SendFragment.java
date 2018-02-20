@@ -75,7 +75,6 @@ public class SendFragment extends android.support.v4.app.Fragment implements Ada
             return;
         }
         getActivity().setTitle(getString(R.string.send));
-
         address = getActivity().findViewById(R.id.send_dcr_add);
         amount = getActivity().findViewById(R.id.send_dcr_amount);
         totalAmountSending = getActivity().findViewById(R.id.send_dcr_total_amt_sndng);
@@ -139,7 +138,7 @@ public class SendFragment extends android.support.v4.app.Fragment implements Ada
                             getActivity().runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    amount.setText(String.format(Locale.getDefault(),"%.8f",balance.getSpendable()/ AccountResponse.SATOSHI));
+                                    amount.setText(String.format(Locale.getDefault(),"%.f",balance.getSpendable()/ AccountResponse.SATOSHI));
                                     if(pd.isShowing()){
                                         pd.dismiss();
                                     }
@@ -296,7 +295,7 @@ public class SendFragment extends android.support.v4.app.Fragment implements Ada
                         if(response.items.get(i).name.trim().equals("imported")){
                             continue;
                         }
-                        categories.add(i, response.items.get(i).name + String.format(Locale.getDefault(), " [%.8f]",response.items.get(i).balance.spendable));
+                        categories.add(i, response.items.get(i).name + String.format(Locale.getDefault(), " [%.f]",response.items.get(i).balance.spendable));
                         accountNumbers.add(response.items.get(i).number);
                     }
                     if(getActivity() == null){
